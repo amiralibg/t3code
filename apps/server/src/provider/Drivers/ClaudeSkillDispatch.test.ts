@@ -2,7 +2,7 @@ import { describe, expect, it } from "vite-plus/test";
 
 import { planClaudeSkillDispatch } from "./ClaudeSkillDispatch.ts";
 
-const SKILLS = new Set(["implement", "review", "re-release-version"]);
+const SKILLS = new Set(["2spec", "implement", "review", "re-release-version"]);
 
 describe("planClaudeSkillDispatch", () => {
   it("leaves a prompt without a known skill untouched", () => {
@@ -24,6 +24,14 @@ describe("planClaudeSkillDispatch", () => {
       leadingText: undefined,
       commandText: "/review\nfocus on auth",
       skillName: "review",
+    });
+  });
+
+  it("dispatches a known skill whose name begins with a digit", () => {
+    expect(planClaudeSkillDispatch("use $2spec for this", SKILLS)).toEqual({
+      leadingText: "use",
+      commandText: "/2spec for this",
+      skillName: "2spec",
     });
   });
 

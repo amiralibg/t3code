@@ -92,6 +92,21 @@ describe("hasMarkdownFilePrimaryAction", () => {
   });
 });
 
+describe("ChatMarkdown skill chips", () => {
+  it("renders known skill references that begin with a digit", () => {
+    const html = renderToStaticMarkup(
+      <ChatMarkdown
+        cwd="/tmp/project"
+        text="Use $2spec for this."
+        skills={[{ name: "2spec", displayName: "2Spec" }]}
+      />,
+    );
+
+    expect(html).toContain('data-markdown-copy="$2spec"');
+    expect(html).toContain("2Spec");
+  });
+});
+
 describe("ChatMarkdown file option chips", () => {
   it("keeps the fallback button text selectable", () => {
     const html = renderToStaticMarkup(

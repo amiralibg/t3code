@@ -198,6 +198,14 @@ describe("splitPromptIntoComposerSegments", () => {
     ]);
   });
 
+  it("splits digit-leading skill tokens into skill segments", () => {
+    expect(splitPromptIntoComposerSegments("Use $2spec please")).toEqual([
+      { type: "text", text: "Use " },
+      { type: "skill", name: "2spec" },
+      { type: "text", text: " please" },
+    ]);
+  });
+
   it("does not convert an incomplete trailing skill token", () => {
     expect(splitPromptIntoComposerSegments("Use $review-follow-up")).toEqual([
       { type: "text", text: "Use $review-follow-up" },

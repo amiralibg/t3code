@@ -31,6 +31,18 @@ describe("collectComposerInlineTokens", () => {
     ]);
   });
 
+  it("collects skill names that begin with a digit", () => {
+    expect(collectComposerInlineTokens("Use $2spec next")).toEqual([
+      {
+        type: "skill",
+        value: "2spec",
+        source: "$2spec",
+        start: 4,
+        end: 10,
+      },
+    ]);
+  });
+
   it("does not convert incomplete trailing tokens", () => {
     expect(collectComposerInlineTokens("Use $ui")).toEqual([]);
     expect(collectComposerInlineTokens("Inspect @AGENTS.md")).toEqual([]);
