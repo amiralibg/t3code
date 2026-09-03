@@ -46,4 +46,10 @@ describe("planClaudeSkillDispatch", () => {
   it("ignores a dollar token glued to other text", () => {
     expect(planClaudeSkillDispatch("cost is 5$implement", SKILLS)).toBeUndefined();
   });
+
+  it("ignores currency amounts and compact monetary expressions", () => {
+    const skillsWithCurrency = new Set([...SKILLS, "20", "20k", "100M"]);
+    expect(planClaudeSkillDispatch("pay $20 tomorrow", skillsWithCurrency)).toBeUndefined();
+    expect(planClaudeSkillDispatch("budget is $20k tomorrow", skillsWithCurrency)).toBeUndefined();
+  });
 });

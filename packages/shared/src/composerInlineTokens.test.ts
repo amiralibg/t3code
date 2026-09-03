@@ -43,9 +43,12 @@ describe("collectComposerInlineTokens", () => {
     ]);
   });
 
-  it("leaves digits-only dollar amounts as text", () => {
+  it("leaves digits-only dollar amounts and compact monetary expressions as text", () => {
     expect(collectComposerInlineTokens("I'll pay $20 tomorrow")).toEqual([]);
     expect(collectComposerInlineTokens("Budget is $1_000 total")).toEqual([]);
+    expect(collectComposerInlineTokens("Budget is $20k tomorrow")).toEqual([]);
+    expect(collectComposerInlineTokens("Cost is $100M total")).toEqual([]);
+    expect(collectComposerInlineTokens("Limit is $1e6 here")).toEqual([]);
   });
 
   it("does not convert incomplete trailing tokens", () => {
