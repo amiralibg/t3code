@@ -206,6 +206,12 @@ describe("splitPromptIntoComposerSegments", () => {
     ]);
   });
 
+  it("keeps digits-only dollar amounts as a single text segment", () => {
+    expect(splitPromptIntoComposerSegments("I'll pay $20 tomorrow")).toEqual([
+      { type: "text", text: "I'll pay $20 tomorrow" },
+    ]);
+  });
+
   it("does not convert an incomplete trailing skill token", () => {
     expect(splitPromptIntoComposerSegments("Use $review-follow-up")).toEqual([
       { type: "text", text: "Use $review-follow-up" },

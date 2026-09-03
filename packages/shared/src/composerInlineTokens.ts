@@ -18,7 +18,12 @@ export interface CollectComposerInlineTokensOptions {
   readonly preserveTrailingFrom?: ReadonlyArray<ComposerInlineToken>;
 }
 
-const SKILL_TOKEN_REGEX = /(^|\s)\$([a-zA-Z0-9][a-zA-Z0-9:_-]*)(?=\s)/g;
+/**
+ * A skill name may start with a digit, but the token must contain a letter
+ * somewhere: the composer chips any `$name` it sees, known or not, so a
+ * digits-only body would turn prose like "I'll pay $20 tomorrow" into a chip.
+ */
+const SKILL_TOKEN_REGEX = /(^|\s)\$(?=[a-zA-Z0-9:_-]*[a-zA-Z])([a-zA-Z0-9][a-zA-Z0-9:_-]*)(?=\s)/g;
 const MENTION_TOKEN_REGEX = /(^|\s)@(?:"((?:\\.|[^"\\])*)"|([^\s@"]+))(?=\s)/g;
 /**
  * The label body is bounded rather than `*`. Unbounded, every whitespace in

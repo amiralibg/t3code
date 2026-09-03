@@ -43,6 +43,11 @@ describe("collectComposerInlineTokens", () => {
     ]);
   });
 
+  it("leaves digits-only dollar amounts as text", () => {
+    expect(collectComposerInlineTokens("I'll pay $20 tomorrow")).toEqual([]);
+    expect(collectComposerInlineTokens("Budget is $1_000 total")).toEqual([]);
+  });
+
   it("does not convert incomplete trailing tokens", () => {
     expect(collectComposerInlineTokens("Use $ui")).toEqual([]);
     expect(collectComposerInlineTokens("Inspect @AGENTS.md")).toEqual([]);
