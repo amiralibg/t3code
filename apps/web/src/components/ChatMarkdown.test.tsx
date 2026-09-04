@@ -263,17 +263,42 @@ describe("hasMarkdownFilePrimaryAction", () => {
 });
 
 describe("ChatMarkdown skill chips", () => {
-  it("renders known skill references that begin with a digit", () => {
-    const html = renderToStaticMarkup(
-      <ChatMarkdown
-        cwd="/tmp/project"
-        text="Use $2spec for this."
-        skills={[{ name: "2spec", displayName: "2Spec" }]}
-      />,
-    );
+  it("updates digit-leading skill labels when discovered skills change", async () => {
+    vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    let renderer: ReactTestRenderer | undefined;
+    const text = "Use $2spec with a $20k budget.";
+    try {
+      await act(async () => {
+        renderer = create(<ChatMarkdown cwd="/tmp/project" text={text} />);
+      });
+      const mounted = renderer!;
+      const labels = (label: string) =>
+        mounted.root.findAllByType("span").filter((node) => node.children.includes(label));
+      expect(labels("2Spec")).toHaveLength(0);
 
-    expect(html).toContain('data-markdown-copy="$2spec"');
-    expect(html).toContain("2Spec");
+      await act(async () => {
+        mounted.update(
+          <ChatMarkdown
+            cwd="/tmp/project"
+            text={text}
+            skills={[
+              { name: "2spec", displayName: "2Spec" },
+              { name: "20k", displayName: "MoneySkill" },
+            ]}
+          />,
+        );
+      });
+      expect(labels("2Spec")).toHaveLength(1);
+      expect(labels("MoneySkill")).toHaveLength(0);
+
+      await act(async () => {
+        mounted.update(<ChatMarkdown cwd="/tmp/project" text={text} skills={[]} />);
+      });
+      expect(labels("2Spec")).toHaveLength(0);
+    } finally {
+      await act(async () => renderer?.unmount());
+      vi.unstubAllGlobals();
+    }
   });
 });
 
